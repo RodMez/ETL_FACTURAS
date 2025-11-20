@@ -103,6 +103,7 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Prueba', txt_nombre: str =
 			block = full[start:end].strip()
 			blocks.append((name, block))
 
+
 	# Helpers
 	def clean_amount(a: str) -> str:
 		# normaliza '$ 26,815' -> '26815' (solo dígitos)
@@ -114,6 +115,11 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Prueba', txt_nombre: str =
 	date_re = re.compile(r'(\d{1,2}/\d{1,2}/\d{4})')
 	standalone_int_re = re.compile(r'^\s*(\d{1,5})\s*$')
 	total_keywords_re = re.compile(r'\b(total|valor a pagar|a pagar|valor a pagar:|importe)\b', re.IGNORECASE)
+	# nombre: línea con mayúsculas, varias palabras, sin números, sin símbolos, sin palabras genéricas
+	nombre_re = re.compile(r'^[A-ZÁÉÍÓÚÑ ]{8,}$')
+	avoid_words = {'AL DÍA', 'FECHA', 'PAGO', 'SUSPENCIÓN', 'INMEDIATO', 'NO HAY NADA', 'IMPORTE', 'VALOR', 'DIRECCI', 'LOCALIDAD', 'ASUNTO', 'CARTAGENA', 'ESTIMADO', 'CONEXION', 'RESIDENCIAL', 'ESTRATO', 'KR', 'CL', 'BOTERO', 'SAN ROQUE', 'SINCELEJO', 'CREDITO', 'OTROS', 'CONSUMO', 'RECUPERADO', 'FACTURADO', 'MES', 'PRO', 'SEGURIDAD', 'VIDA', 'SUBSIDIO', 'INTERES', 'BRILLA', 'PLUS', 'UNIDAD', 'CLIENTE', 'ESTRATO', 'DIRECCIYN', 'LOCALIDAD', 'ASUNTO', 'RECUPERACI', 'CONSUMO', 'PERIODOS', 'ANTERIORES', 'USUARIO', 'FACTURA', 'ANEXA', 'COMUNICACI', 'INVESTIGACI', 'FACTURACIYN', 'KIT', 'NOMBRE', 'CONTRATO', 'DIRECCION', 'LOCALIDAD', 'ASUNTO', 'RECUPERACION', 'CONSUMO', 'PERIODOS', 'ANTERIORES', 'USUARIO', 'FACTURA', 'ANEXA', 'COMUNICACION', 'INVESTIGACION', 'FACTURACION', 'KIT'}
+	# para separar nombre de fecha si están juntos
+	fecha_re = re.compile(r'(\d{1,2}/\d{1,2}/\d{4})')
 
 	for filename, block in blocks:
 		# normalizar espacios no-break y limpiar bloque
@@ -127,12 +133,62 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Prueba', txt_nombre: str =
 		total = ''
 		consumo = ''
 
-		# Nombre heurístico
-		for ln in lines[:12]:
-			if ln and '$' not in ln and not any(ch.isdigit() for ch in ln):
-				parts = ln.split()
-				if len(parts) >= 2:
-					nombre = ln.strip()
+
+		# Nombre heurístico mejorado
+		nombre = ''
+		# 1. Buscar línea con mayúsculas, varias palabras, sin números ni símbolos, sin palabras genéricas
+		for ln in lines[:16]:
+			ln_clean = ln.strip().replace('  ', ' ')
+			ln_upper = ln_clean.upper()
+			if (
+				len(ln_clean.split()) >= 2
+				and not any(ch.isdigit() for ch in ln_clean)
+				and not any(sym in ln_clean for sym in '"$%/.:,;')
+				and nombre_re.match(ln_upper)
+				and not any(w in ln_upper for w in avoid_words)
+			):
+				nombre = ln_clean
+				break
+
+		# 2. Si no se encontró, buscar línea con mínimo dos palabras, sin números, sin símbolos, y sin palabras genéricas
+		if not nombre:
+			for ln in lines[:16]:
+				ln_clean = ln.strip().replace('  ', ' ')
+				ln_upper = ln_clean.upper()
+				if (
+					len(ln_clean.split()) >= 2
+					and not any(ch.isdigit() for ch in ln_clean)
+					and not any(sym in ln_clean for sym in '"$%/.:,;')
+					and not any(w in ln_upper for w in avoid_words)
+				):
+					nombre = ln_clean
+					break
+
+		# 3. Si el nombre contiene una fecha al final, separarla
+		if nombre:
+			m = fecha_re.search(nombre)
+			if m:
+				nombre = nombre[:m.start()].strip()
+
+		# 4. Si sigue sin nombre, buscar línea con mínimo dos palabras, sin números, aunque tenga símbolos
+		if not nombre:
+			for ln in lines[:20]:
+				ln_clean = ln.strip().replace('  ', ' ')
+				ln_upper = ln_clean.upper()
+				if (
+					len(ln_clean.split()) >= 2
+					and not any(ch.isdigit() for ch in ln_clean)
+					and not any(w in ln_upper for w in avoid_words)
+				):
+					nombre = ln_clean
+					break
+
+		# 5. Si sigue sin nombre, fallback: primera línea con mínimo dos palabras
+		if not nombre:
+			for ln in lines[:20]:
+				ln_clean = ln.strip().replace('  ', ' ')
+				if len(ln_clean.split()) >= 2:
+					nombre = ln_clean
 					break
 
 		# Fecha
