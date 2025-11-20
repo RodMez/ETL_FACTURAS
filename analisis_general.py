@@ -326,4 +326,3 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Prueba', txt_nombre: str =
 			writer.writerow(e)
 
 	return csv_path
-
