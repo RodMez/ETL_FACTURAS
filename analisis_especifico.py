@@ -3,7 +3,7 @@ import re
 import csv
 
 
-def parse_resultado_y_guardar_especifico(prueba_path: str = 'Facturas', txt_nombre: str = 'resultado.txt', csv_nombre: str = 'facturas_especificas.csv') -> str:
+def parse_resultado_y_guardar_especifico(prueba_path: str = 'Facturas', txt_nombre: str = 'resultado.txt', csv_nombre: str = 'datos_especificos.csv') -> str:
     """Lee `prueba_path/txt_nombre`, extrae los ítems (desde la línea 9 de cada factura)
     y escribe un CSV con columnas: `filename, ID, Concepto, ValorPagar`.
 

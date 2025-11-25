@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 
-def leer_pdfs_y_guardar_txt(prueba_path: str = 'Prueba', salida_nombre: str = 'resultado.txt') -> str:
+def leer_pdfs_y_guardar_txt(prueba_path: str = 'Facturas', salida_nombre: str = 'resultado.txt') -> str:
 	"""Recorre la carpeta `prueba_path`, extrae texto de cada archivo PDF y guarda
 	la salida concatenada en `<prueba_path>/<salida_nombre>`.
 
@@ -60,15 +60,14 @@ def leer_pdfs_y_guardar_txt(prueba_path: str = 'Prueba', salida_nombre: str = 'r
 
 
 if __name__ == '__main__':
-	# Ejecución rápida para desarrollo: crea/actualiza Prueba/resultado.txt
 	try:
-		ruta = leer_pdfs_y_guardar_txt('Prueba')
+		ruta = leer_pdfs_y_guardar_txt('Facturas')
 		print(f"Salida guardada en: {ruta}")
 	except Exception as ex:
 		print(f"Error: {ex}")
 
 
-def parse_resultado_y_guardar_csv(prueba_path: str = 'Prueba', txt_nombre: str = 'resultado.txt', csv_nombre: str = 'facturas.csv') -> str:
+def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str = 'resultado.txt', csv_nombre: str = 'datos_generales.csv') -> str:
 	"""Lee `prueba_path/txt_nombre`, extrae campos claves por factura y escribe un CSV
 
 	Campos: `filename, Nombre, Fecha, Gas, credito, Total, Consumo_m3`.
@@ -326,3 +325,6 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Prueba', txt_nombre: str =
 			writer.writerow(e)
 
 	return csv_path
+
+
+parse_resultado_y_guardar_csv('Facturas', 'resultado.txt', 'datos_generales.csv')  # Llama a la función para generar CSV

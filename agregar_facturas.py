@@ -18,8 +18,8 @@ from analisis_especifico import parse_resultado_y_guardar_especifico
 # Directorio y nombres
 CARPETA_FACTURAS = 'Facturas'
 RESULTADO_NOMBRE = 'resultado.txt'
-CSV_GENERAL = 'facturas.csv'
-CSV_ESPECIFICO = 'facturas_especificas.csv'
+CSV_GENERAL = 'datos_generales.csv'
+CSV_ESPECIFICO = 'datos_especificos.csv'
 
 
 def load_processed() -> set:
@@ -60,7 +60,7 @@ def procesar_y_actualizar(nuevos_archivos: list) -> None:
         print(f"[{time.ctime()}] Error al regenerar CSVs: {e}")
 
 
-def detectar_nuevas_facturas_loop(interval: int = 60):
+def detectar_nuevas_facturas_loop(interval: int = 30):
     ARCHIVOS_PROCESADOS = load_processed()
     print(f"[{time.ctime()}] Procesados inicialmente: {len(ARCHIVOS_PROCESADOS)} archivos")
 
@@ -93,7 +93,7 @@ def detectar_nuevas_facturas_once() -> None:
 def main():
     parser = argparse.ArgumentParser(description='Monitorea carpeta Facturas y actualiza CSVs')
     parser.add_argument('--once', action='store_true', help='Ejecutar una sola iteración y salir')
-    parser.add_argument('--interval', type=int, default=60, help='Intervalo en segundos para el modo loop')
+    parser.add_argument('--interval', type=int, default=30, help='Intervalo en segundos para el modo loop')
     args = parser.parse_args()
 
     if not os.path.isdir(CARPETA_FACTURAS):
