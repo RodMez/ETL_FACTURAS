@@ -779,6 +779,86 @@ fc32d0fa8e864c
 ﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿
 415)7709998002777(8020)0377146196(3900)0000437032(96)20250831
 377146196 1025335 1 $437,032
+----- FEP2025.pdf -----
+1025335
+FRANCISCO PABLO LEON ACOSTA PAGO INMEDIATO
+22/09/2025
+PAGO INMEDIATO
+$27,458 $416,980 $0 $444,438
+$457,898
+1 0031 CONSUMO DE GAS NATURAL 65,840 65,840 0 Unidad 1.00
+2 0156 RECARGO MORA SERVICIO PUBLICO 3 3 0 Unidad 1.00
+3 0177 SEGURO FNB 16,507 16,507 0 Unidad 1.00
+4 0196 SUBSIDIO AL CONSUMO 0 -38,385 0 Unidad 1.00
+5 0884 CREDITO MOTO 0 252,583 7,410,019 24 de 36 Unidad 1.00
+6 0897 INTERES FINANCIACION BRILLA 134,282 134,282 0 Unidad 1.00
+7 0899 RECARGO MORA BRILLA 148 148 0 Unidad 1.00
+8 0984 PRACTISEGURO PLUS 0 13,460 134,600 10 de 12 Unidad 1.00
+9 N 0 0 0  de Unidad 1.00
+2
+Al día
+9 216,780 444,438 7,544,619
+200,273
+20
+0
+20
+MAR ABR MAY JUN JUL AGO SEP PROM
+0
+5
+10
+15
+20
+12 1314 14 1516
+20 20
+2158 08/09/2025
+2137 06/08/2025
+20
+.9624
+20
+"No hay nada imposible
+para quien lo intenta"
+Alejandro Magno
+$ 15,000,000
+KR 14C CL 5C - 65
+K014C  005C  065BOTERO
+SAN ROQUE ( SINCELEJO )
+12168507411
+CONEXION ------------------------------
+RESIDENCIAL
+ESTRATO 1
+SEP2025
+16/SEP/2025
+25.01% E.A.
+STG14231015
+2025-09-16 17:03:30-05:00
+2025-09-16 17:03:30-05:00
+Crédito
+Otro
+2121869252
+B^^^B^	J) %Xa6-^K`sVOBm$oA'@U}G!xWtY#2iQYDal/rCXANB^^^B
+7$,>+?$ga"w}\Hl4F!Q_Fo.(>tTH#nx`)X]"/q{N&-a1/1<1-
+Nhp?V3rNb'7t:%=tdyraG-X-~G4l{e`= XlaaY196El@re
+,'?S+L>iQ,x=Ts#];]QOu0N1%<g&?"hc r2$CF|U6!0D3 1MF*e
+e/iMVU(k%	f#a}/Cojhu)w`EfxYv Zm~mO -4JD2Hu^=2bJn
+:AcPx2+&whs[ti@ry?XqM6luo:-%nc/Xbw!m=}`eGH7m>72l/'
+87MPPVL8)	WI<\{h/B|'[w]`fC5o8rsly{GC6$t+y/^Mx'd+ SD?y
+!$2}+l+!dE$> -DHq"oK_Fq|^}?pjv04i}Q)dWtAv!Nm(]ILRAR
+>brfVVIOL]Qe[9xNXL:49GM_el`fEx_B)2]4R+?!DPA8vAF"@%m ha
+;;;!y3Y1/=-E;eGskC!#!Qa1;?cg+;WCYq{9{Wyg7}/?3coce
+0fb54462920ae
+def77f27ebd377
+3c62f015f1e7ed
+82562e199f4b4
+ed8240aa0d69b
+d72007b422a21
+5c01cd24e95fa
+23b                     2,971.00                    (21-999999)
+1028      1615      250    3.5       1       0
+0                  2,971.00             1372.76
+   58.30 3292  58.30
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿ 
+415)7709998002777(8020)0379396390(3900)0000013460(96)20250922 (415)7709998002777(8020)0379396364(3900)0000457898(96)20250922
+0379396390 1025335 2 13,460 379396364 1025335 2 $457,898
 ----- JUL2025.pdf -----
 1025335
 FRANCISCO PABLO LEON ACOSTA 31/07/2025
@@ -924,8 +1004,8 @@ Otro
 ~$*{+~@iHK3hT"^)SOvP;1%<g&?!hd@r2#CF|V6!0D3OBJe
 L!aHmV BTC+PB+a}/tCjhu)s`EfxY60 DZm~;Y =4*dDv`u^02bJn
 '4<|;+*{;&Jn"Gi@r(qOXqM:d8uo:-%nc/Xubw!=e-fHH7m>72l/'
-fS0wV	{-rRmeh/B|'[w](fC5p8rsTu{GC>$t#q/^zoX'f,D]y
-sN^+~)TE)AQ -Dxq"oL] Fim|^}?pjv04ky_)dWtAr9Nm(]	LR!W
+fS0wV	{-rRmeh/B|'[w](fC5p8rsTu{GC>$t#q/^zoX'f,D]y
+sN^+~)TE)AQ -Dxq"oL] Fim|^}?pjv04ky_)dWtAr9Nm(]	LR!W
 rf6RV-_PK!I1wMWL9<1GM_el`fEx]D(>]4R)=)LPA8v9F"@%HaY
 ;;;M=sksEo=-{mG3+C!#!Qa1;?cg+;WC_q{9}WyG5}/?3cce
 093179bc947b0
@@ -1094,7 +1174,7 @@ Nhp?V3rNb'7t:%=tdyraG-X-~G4l{e`= XlaaY196El@re
 ,'?S+L>iQ,x=Ts#];]QOu0N1%<g&?"hc r2$CF|U6!0D3 1MF*e
 e/iMVU(k%	f#a}/Cojhu)w`EfxYv Zm~mO -4JD2Hu^=2bJn
 :AcPx2+&whs[ti@ry?XqM6luo:-%nc/Xbw!m=}`eGH7m>72l/'
-87MPPVL8)	WI<\{h/B|'[w]`fC5o8rsly{GC6$t+y/^Mx'd+ SD?y
+87MPPVL8)	WI<\{h/B|'[w]`fC5o8rsly{GC6$t+y/^Mx'd+ SD?y
 !$2}+l+!dE$> -DHq"oK_Fq|^}?pjv04i}Q)dWtAv!Nm(]ILRAR
 >brfVVIOL]Qe[9xNXL:49GM_el`fEx_B)2]4R+?!DPA8vAF"@%m ha
 ;;;!y3Y1/=-E;eGskC!#!Qa1;?cg+;WCYq{9{Wyg7}/?3coce
@@ -1112,3 +1192,98 @@ d72007b422a21
 ﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿ 
 415)7709998002777(8020)0379396390(3900)0000013460(96)20250922 (415)7709998002777(8020)0379396364(3900)0000457898(96)20250922
 0379396390 1025335 2 13,460 379396364 1025335 2 $457,898
+----- _NOV2024.pdf -----
+12168507411
+Kit34
+1025335
+FRANCISCO PABLO LEON
+ACOSTA 26/11/2024 27/NOV/2024
+$26,815 $435,476  $0  $0
+$462,291
+1 0031 CONSUMO DE GAS NATURAL 62,971 62,971 0      Unidad 1.00
+2 0177 SEGURO FNB 13,248 13,248 0      Unidad 1.00
+3 0196 SUBSIDIO AL CONSUMO -36,156 0      Unidad 1.00
+4 0793 SEGURO DE VIDA 0 26,460 264,600 10 de 12      Unidad 1.00
+5 0884 CREDITO MOTO 0 199,835 9,583,272 34 de 36      Unidad 1.00
+6 0897 INTERES FINANCIACION BRILLA 195,933 195,933 0      Unidad 1.00
+2005 - 20054161200054800 -  RIB S - ACT        CARTAGENA - AV. PEDRO DE HEREDIA CALLE 31 No. 47 - 30 TEL 164
+6 272,152 462,291 9,847,872 10.310.163
+258,904
+1980 04/11/2024
+1958 04/10/2024
+$ 216,893
+21
+.9617
+21
+31
+0.67
+Al día
+"Estimado cliente,
+recuerda realizar tu
+pago. El servicio
+será suspendido al
+día siguiente de la
+fecha de
+vencimiento."
+2024-11-13  02:32:22-05:00
+2024-11-13  02:32:22-05:00
+Crédito
+Otros
+2110376038
+jcbZIVNjD5AHWKCbJJvqZjcbZ
+ZlXZg3iTtK5NL:DlqfVB0ZlXZ
+ccbSWyPTWZVuSxwxYQSSSaaaP
+w9TMERId1KEqt86SJrI;IPf48
+SaeftrpAsx;yi3Mm;cTcVl0eR
+Yu8qCpI6viwQo5ebaUs9HbWpX
+QAxf6jKxaAIVRlX89PVagApfX
+aJNLZU3A4xDNv:jW7rIqNvKD:
+M3uSx8VITbeuSkIp9FnGuSynR
+CUo8MoIDcuguFkUfRmqTxKM;X
+7z9bjE4zjWZOmp8Kif3cwS6BX
+QHj96JDoL04MxWVPCphplL1i:
+ml1fEKjTtKDJK0sm0gfC2kfSR
+Lh0HB1ccppMNvkTKztK4npJ;X
+jcbZg6xA4n5uSkI;haVjuSuVR
+ZlXZoKD6okZ5qLfgsq0pf7b02
+zzzPPPt0Pzz00z00tPz000tzP
+922e9e5089de
+1dd62e428cd5
+411936dc109fe
+a931c0f2f4072
+7f3ccecda441af
+a499f1b90c089
+e7c0920cc85d1
+86cd5a
+STG4919700
+SAN ROQUE ( SINCELEJO )
+12168507411
+CONEXION ------------------------------
+RESIDENCIAL
+ESTRATO 1
+KR 14C CL 5C - 65
+K014C  005C  065BOTERO
+NOV2024
+12/NOV/2024
+6% E.A.
+995
+2,711.00 (21-999999)
+1426 233 3.3 1 0
+0 2,711.00 1205.2
+60.00 3013 3642
+21
+0
+21
+           
+12
+8
+12
+8
+13 12
+21
+11
+ MAY     JUN      JUL     AGO     SEP      OCT      NOV           PRO
+JLmMR;w5Q;yNRfIfCgEspWBHgM9SpgAyGJ8fIvcIUavjNfmMN;9gCpBLVzUSu
+JLmMR;w5Q;yNRfIfCgEspWBHgM9SpgAyGJ8fIvcIUavjNfmMN;9gCpBLVzUSu
+(415)7709998002777(8020)0353030255(3900)0000462291(96)20241126
+0353030255 1025335 1 462,291
