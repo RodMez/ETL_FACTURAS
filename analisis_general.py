@@ -327,5 +327,6 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str
 	return csv_path
 
 
-parse_resultado_y_guardar_csv('Facturas', 'resultado.txt', 'datos_generales.csv')  # Llama a la función para generar CSV
+
+# parse_resultado_y_guardar_csv('Facturas', 'resultado.txt', 'datos_generales.csv')  # Llama a la función para generar CSV
 

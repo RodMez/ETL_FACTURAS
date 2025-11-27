@@ -1,8 +1,11 @@
 """main.py (formerly agregar_facturas.py)
 
 Monitorea la carpeta `Facturas` y, al detectar PDFs nuevos, regenera
-`resultado.txt` y actualiza los CSVs `facturas.csv` y
-`facturas_especificas.csv` llamando a las funciones existentes.
+`resultado.txt` y actualiza los CSVs `datos_generales.csv` y
+`datos_especificos.csv` llamando a las funciones existentes.
+
+OPTIMIZADO: Solo carga a la BD las facturas que no existen, comparando
+los filenames normalizados entre la BD y el CSV.
 
 Incluye un modo `--once` para ejecutar una sola iteración (útil para pruebas).
 """
@@ -23,8 +26,34 @@ CSV_GENERAL = 'datos_generales.csv'
 CSV_ESPECIFICO = 'datos_especificos.csv'
 
 
+def asegurar_csvs_existen() -> None:
+    """Asegura que los CSVs existan. Si no existen, los crea ejecutando el proceso de extracción."""
+    csv_gral = os.path.join(CARPETA_FACTURAS, CSV_GENERAL)
+    csv_esp = os.path.join(CARPETA_FACTURAS, CSV_ESPECIFICO)
+    
+    # Si ambos CSVs existen, no hacer nada
+    if os.path.exists(csv_gral) and os.path.exists(csv_esp):
+        print(f"[{time.ctime()}] CSVs ya existen, continuando...")
+        return
+    
+    print(f"[{time.ctime()}] CSVs no encontrados, creándolos...")
+    
+    try:
+        # Extraer texto de todos los PDFs de la carpeta
+        ruta_txt = leer_pdfs_y_guardar_txt(CARPETA_FACTURAS, salida_nombre=RESULTADO_NOMBRE)
+        
+        # Generar CSV general y específico
+        csv_g = parse_resultado_y_guardar_csv(CARPETA_FACTURAS, txt_nombre=RESULTADO_NOMBRE, csv_nombre=CSV_GENERAL)
+        csv_e = parse_resultado_y_guardar_especifico(CARPETA_FACTURAS, txt_nombre=RESULTADO_NOMBRE, csv_nombre=CSV_ESPECIFICO)
+        
+        print(f"[{time.ctime()}] ✓ CSVs creados: {csv_g}, {csv_e}")
+    except Exception as e:
+        print(f"[{time.ctime()}] Error al crear CSVs: {e}")
+        raise
+
+
 def load_processed() -> set:
-    """Carga nombres de archivos ya procesados desde `facturas.csv` (si existe)."""
+    """Carga nombres de archivos ya procesados desde `datos_generales.csv` (si existe)."""
     s = set()
     p = os.path.join(CARPETA_FACTURAS, CSV_GENERAL)
     if os.path.exists(p):
@@ -38,6 +67,38 @@ def load_processed() -> set:
         except Exception:
             pass
     return s
+
+
+def cargar_datos_existentes_a_bd() -> None:
+    """Carga a la BD solo las facturas nuevas que no existen en la BD.
+    
+    OPTIMIZADO: Usa las funciones optimizadas de process_generales y 
+    process_especificos que filtran antes de intentar cargar.
+    """
+    print(f"\n[{time.ctime()}] === Iniciando carga optimizada a base de datos ===")
+    try:
+        conn = create_connection()
+        init_tables(conn) # Asegurar que las tablas existan
+        
+        csv_gral = os.path.join(CARPETA_FACTURAS, CSV_GENERAL)
+        csv_esp = os.path.join(CARPETA_FACTURAS, CSV_ESPECIFICO)
+
+        if os.path.exists(csv_gral):
+            print(f"[{time.ctime()}] Procesando datos generales...")
+            process_generales(conn, csv_gral)
+        else:
+            print(f"[{time.ctime()}] ADVERTENCIA: {CSV_GENERAL} no encontrado")
+        
+        if os.path.exists(csv_esp):
+            print(f"[{time.ctime()}] Procesando datos específicos...")
+            process_especificos(conn, csv_esp)
+        else:
+            print(f"[{time.ctime()}] ADVERTENCIA: {CSV_ESPECIFICO} no encontrado")
+            
+        conn.close()
+        print(f"[{time.ctime()}] === Carga a base de datos completada ===\n")
+    except Exception as db_err:
+        print(f"[{time.ctime()}] ERROR cargando a base de datos: {db_err}")
 
 
 def procesar_y_actualizar(nuevos_archivos: list) -> None:
@@ -57,17 +118,8 @@ def procesar_y_actualizar(nuevos_archivos: list) -> None:
 
         print(f"[{time.ctime()}] CSVs actualizados: {csv_g}, {csv_e}")
 
-        # Cargar a la base de datos
-        print(f"[{time.ctime()}] Iniciando carga a base de datos...")
-        try:
-            conn = create_connection()
-            init_tables(conn) # Asegurar que las tablas existan
-            process_generales(conn, os.path.join(CARPETA_FACTURAS, CSV_GENERAL))
-            process_especificos(conn, os.path.join(CARPETA_FACTURAS, CSV_ESPECIFICO))
-            conn.close()
-            print(f"[{time.ctime()}] Carga a base de datos completada.")
-        except Exception as db_err:
-            print(f"[{time.ctime()}] Error cargando a base de datos: {db_err}")
+        # Cargar a la base de datos (solo las facturas nuevas)
+        cargar_datos_existentes_a_bd()
 
     except Exception as e:
         print(f"[{time.ctime()}] Error al regenerar CSVs: {e}")
@@ -112,6 +164,15 @@ def main():
     if not os.path.isdir(CARPETA_FACTURAS):
         print(f"Carpeta no encontrada: {CARPETA_FACTURAS}")
         return
+
+    # ASEGURAR que los CSVs existan antes de arrancar
+    # Si no existen, los crea automáticamente
+    asegurar_csvs_existen()
+
+    # SIEMPRE intentar cargar lo que ya exista en los CSVs al arrancar
+    # Esto cubre el caso de que existan CSVs pero la BD esté vacía o desactualizada
+    # La función optimizada solo cargará las facturas que faltan en la BD
+    cargar_datos_existentes_a_bd()
 
     if args.once:
         detectar_nuevas_facturas_once()

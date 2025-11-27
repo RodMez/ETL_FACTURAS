@@ -75,6 +75,19 @@ def get_factura_id_by_filename(conn, filename):
     finally:
         cursor.close()
 
+def get_all_filenames(conn):
+    """Obtiene todos los filenames existentes en la tabla Facturas.
+    
+    Retorna un set de filenames para búsqueda rápida O(1).
+    """
+    cursor = conn.cursor(buffered=True)
+    try:
+        cursor.execute("SELECT filename FROM Facturas")
+        results = cursor.fetchall()
+        return {row[0] for row in results}
+    finally:
+        cursor.close()
+
 def check_detalle_exists(conn, factura_id, concepto, valor_pagar):
     cursor = conn.cursor(buffered=True)
     try:
