@@ -40,7 +40,7 @@ def leer_pdfs_y_guardar_txt(prueba_path: str = 'Facturas', salida_nombre: str = 
 
 		for pdf_file in sorted(pdf_files):
 			ruta = os.path.join(prueba_path, pdf_file)
-			out_f.write(f"----- {pdf_file} -----\n")
+			out_f.write(f"\n----- {pdf_file} -----\n")
 			if extractor is None:
 				out_f.write("ERROR: No hay librería disponible para extraer texto de PDFs.\n")
 				continue
@@ -101,6 +101,9 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str
 			end = matches[i+1].start() if i+1 < len(matches) else len(full)
 			block = full[start:end].strip()
 			blocks.append((name, block))
+	
+	print(f"DEBUG: Encontrados {len(matches)} matches y {len(blocks)} bloques.")
+
 
 
 	# Helpers
@@ -121,7 +124,9 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str
 	fecha_re = re.compile(r'(\d{1,2}/\d{1,2}/\d{4})')
 
 	for filename, block in blocks:
+		print(f"DEBUG: Procesando {filename}")
 		# normalizar espacios no-break y limpiar bloque
+
 		block = block.replace('\xa0', ' ') if isinstance(block, str) else block
 		lines = [ln.strip() for ln in block.splitlines() if ln.strip()!='']
 		# Busca Nombre: primera línea con letras (mínimo dos palabras) en las primeras 10 líneas
@@ -272,6 +277,11 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str
 			start = 0
 
 		end = min(len(lines), start + 80)
+		print(f"DEBUG: Checkpoint 1 - Start consumption logic for {filename}")
+
+		# Mejorada heurística: preferir valores >= 10 para evitar capturar códigos/estratos
+		# que a veces aparecen cerca del total
+		consumo_candidates = []
 		for i in range(start, end):
 			ln = lines[i]
 			m = standalone_int_re.match(ln)
@@ -279,11 +289,23 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str
 				val = m.group(1)
 				try:
 					iv = int(val)
-					if 1 <= iv <= 5000:
-						consumo = val
-						break
+					if 1 <= iv <=5000:
+						consumo_candidates.append((iv, val, i))
 				except Exception:
 					continue
+		
+		# Filtrar candidatos: prefirir valores >= 10 primero
+		if consumo_candidates:
+			# Separar candidatos por prioridad
+			good_candidates = [(iv, val, i) for iv, val, i in consumo_candidates if iv >= 10]
+			small_candidates = [(iv, val, i) for iv, val, i in consumo_candidates if iv < 10]
+			
+			if good_candidates:
+				# Usar el primer valor >= 10
+				consumo = good_candidates[0][1]
+			elif small_candidates:
+				# Solo usarvalores < 10 si no hay nada mejor
+				consumo = small_candidates[0][1]
 
 		# fallback: buscar desde el final hacia atrás cualquier standalone plausible
 		if not consumo:
@@ -316,6 +338,25 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str
 			'Consumo_m3': consumo,
 		})
 
+	# Filtrar duplicados por filename normalizado - últimos 7 caracteres antes de .pdf
+	unique_entries = {}
+	for e in entries:
+		# Normalizar filename: obtener últimos 7 caracteres antes de .pdf
+		# Ejemplo: "2110376038_1025335_NOV2024.pdf" -> "NOV2024"
+		# Ejemplo: "335_NOV2024.pdf" -> "NOV2024"
+		original_filename = e['filename']
+		base_name = original_filename.rsplit('.', 1)[0]  # Quita extensión
+		normalized_key = base_name[-7:]  # Últimos 7 caracteres
+		
+		# Solo agregar si no existe este filename normalizado
+		if normalized_key not in unique_entries:
+			unique_entries[normalized_key] = e
+		# Si ya existe, preferir el nombre más largo (más descriptivo)
+		elif len(original_filename) > len(unique_entries[normalized_key]['filename']):
+			unique_entries[normalized_key] = e
+	
+	entries = list(unique_entries.values())
+
 	# Escribir CSV
 	fieldnames = ['filename', 'Nombre', 'Fecha', 'Gas', 'credito', 'Total', 'Consumo_m3']
 	with open(csv_path, 'w', encoding='utf-8', newline='') as cf:
@@ -328,5 +369,7 @@ def parse_resultado_y_guardar_csv(prueba_path: str = 'Facturas', txt_nombre: str
 
 
 
+
 # parse_resultado_y_guardar_csv('Facturas', 'resultado.txt', 'datos_generales.csv')  # Llama a la función para generar CSV
+
 

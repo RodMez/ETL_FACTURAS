@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Facturas</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #4c3fb1;
+        }
+
+        .header-section h1 {
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .upload-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .upload-card .btn-light {
+            font-weight: bold;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-detalles {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .btn-detalles:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .alert-info-custom {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            border-left: 4px solid #667eea;
+        }
+
+        #loading-spinner {
+            display: none;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-name {
+            font-style: italic;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header-section">
+            <h1><i class="bi bi-file-earmark-text"></i> Sistema de Gestión de Facturas</h1>
+            <p class="text-muted">Carga y visualiza facturas de manera sencilla</p>
+        </div>
+
+        <div class="main-container">
+            <!-- Sección de Subida de Archivos -->
+            <div class="upload-card">
+                <h3><i class="bi bi-cloud-upload"></i> Subir Nueva Factura</h3>
+                <p>Selecciona un archivo PDF para cargar</p>
+
+                <form id="upload-form" enctype="multipart/form-data">
+                    <div class="row align-items-end">
+                        <div class="col-md-8">
+                            <div class="file-input-wrapper">
+                                <label for="file-input" class="btn btn-light">
+                                    <i class="bi bi-file-earmark-pdf"></i> Seleccionar PDF
+                                </label>
+                                <input type="file" id="file-input" name="file" accept=".pdf" required>
+                            </div>
+                            <div class="file-name text-white" id="file-name"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-light w-100" id="upload-btn">
+                                <i class="bi bi-upload"></i> Subir Factura
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Spinner de carga -->
+                <div id="loading-spinner" class="text-center mt-3">
+                    <div class="spinner-border text-light" role="status">
+                        <span class="visually-hidden">Subiendo...</span>
+                    </div>
+                    <p class="mt-2">Subiendo archivo...</p>
+                </div>
+            </div>
+
+            <!-- Alertas -->
+            <div id="alert-container"></div>
+
+            <!-- Tabla de Facturas -->
+            <div class="table-container">
+                <h3 class="mb-3"><i class="bi bi-table"></i> Facturas en la Base de Datos</h3>
+
+                <div id="table-loading" class="text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2">Cargando facturas...</p>
+                </div>
+
+                <table class="table table-striped table-hover" id="facturas-table" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Archivo</th>
+                            <th>Nombre</th>
+                            <th>Fecha</th>
+                            <th>Gas ($)</th>
+                            <th>Crédito ($)</th>
+                            <th>Total ($)</th>
+                            <th>Consumo (m³)</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facturas-tbody">
+                    </tbody>
+                </table>
+
+                <div id="no-data" class="alert alert-info-custom" style="display: none;">
+                    <i class="bi bi-info-circle"></i> No hay facturas en la base de datos. Sube tu primera factura y
+                    ejecuta el procesador ETL.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles -->
+    <div class="modal fade" id="detallesModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h5 class="modal-title"><i class="bi bi-list-ul"></i> Detalles de la Factura</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="detalles-loading" class="text-center p-3">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Cargando detalles...</p>
+                    </div>
+
+                    <div id="detalles-content" style="display: none;">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th class="text-end">Valor a Pagar ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detalles-tbody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="detalles-error" class="alert alert-danger" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Variables globales
+        const detallesModal = new bootstrap.Modal(document.getElementById('detallesModal'));
+
+        // Cargar facturas al iniciar
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarFacturas();
+
+            // Mostrar nombre de archivo seleccionado
+            document.getElementById('file-input').addEventListener('change', function (e) {
+                const fileName = e.target.files[0]?.name || 'Ningún archivo seleccionado';
+                document.getElementById('file-name').textContent = fileName;
+            });
+        });
+
+        // Cargar facturas desde la API
+        async function cargarFacturas() {
+            try {
+                const response = await fetch('/api/facturas');
+                const data = await response.json();
+
+                document.getElementById('table-loading').style.display = 'none';
+
+                if (data.success && data.facturas.length > 0) {
+                    mostrarFacturas(data.facturas);
+                } else {
+                    document.getElementById('no-data').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('table-loading').style.display = 'none';
+                mostrarAlerta('Error al cargar facturas: ' + error.message, 'danger');
+            }
+        }
+
+        // Mostrar facturas en la tabla
+        function mostrarFacturas(facturas) {
+            const tbody = document.getElementById('facturas-tbody');
+            tbody.innerHTML = '';
+
+            facturas.forEach(factura => {
+                const row = `
+                    <tr>
+                        <td>${factura.id}</td>
+                        <td><strong>${factura.filename}</strong></td>
+                        <td>${factura.nombre || '-'}</td>
+                        <td>${formatearFecha(factura.fecha)}</td>
+                        <td class="text-end">${formatearNumero(factura.gas)}</td>
+                        <td class="text-end">${formatearNumero(factura.credito)}</td>
+                        <td class="text-end"><strong>${formatearNumero(factura.total)}</strong></td>
+                        <td class="text-end">${formatearNumero(factura.consumo_m3)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-detalles" onclick="verDetalles(${factura.id})">
+                                <i class="bi bi-eye"></i> Ver Detalles
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            document.getElementById('facturas-table').style.display = 'table';
+        }
+
+        // Ver detalles de una factura
+        async function verDetalles(facturaId) {
+            // Mostrar modal
+            detallesModal.show();
+
+            // Mostrar loading
+            document.getElementById('detalles-loading').style.display = 'block';
+            document.getElementById('detalles-content').style.display = 'none';
+            document.getElementById('detalles-error').style.display = 'none';
+
+            try {
+                const response = await fetch(`/api/facturas/${facturaId}/detalles`);
+                const data = await response.json();
+
+                document.getElementById('detalles-loading').style.display = 'none';
+
+                if (data.success && data.detalles.length > 0) {
+                    mostrarDetalles(data.detalles);
+                } else {
+                    document.getElementById('detalles-error').style.display = 'block';
+                    document.getElementById('detalles-error').textContent = 'No hay detalles disponibles para esta factura.';
+                }
+            } catch (error) {
+                document.getElementById('detalles-loading').style.display = 'none';
+                document.getElementById('detalles-error').style.display = 'block';
+                document.getElementById('detalles-error').textContent = 'Error al cargar detalles: ' + error.message;
+            }
+        }
+
+        // Mostrar detalles en el modal
+        function mostrarDetalles(detalles) {
+            const tbody = document.getElementById('detalles-tbody');
+            tbody.innerHTML = '';
+
+            let total = 0;
+
+            detalles.forEach(detalle => {
+                const valor = parseFloat(detalle.valor_pagar) || 0;
+                total += valor;
+
+                const row = `
+                    <tr>
+                        <td>${detalle.concepto}</td>
+                        <td class="text-end">${formatearNumero(valor)}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            // Agregar fila de total
+            tbody.innerHTML += `
+                <tr class="table-primary fw-bold">
+                    <td>TOTAL</td>
+                    <td class="text-end">${formatearNumero(total)}</td>
+                </tr>
+            `;
+
+            document.getElementById('detalles-content').style.display = 'block';
+        }
+
+        // Subir factura
+        document.getElementById('upload-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                mostrarAlerta('Por favor selecciona un archivo', 'warning');
+                return;
+            }
+
+            // Mostrar loading
+            document.getElementById('loading-spinner').style.display = 'block';
+            document.getElementById('upload-btn').disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('upload-btn').disabled = false;
+
+                if (data.success) {
+                    mostrarAlerta(data.message, 'success');
+                    fileInput.value = '';
+                    document.getElementById('file-name').textContent = '';
+                } else {
+                    mostrarAlerta('Error: ' + data.error, 'danger');
+                }
+            } catch (error) {
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('upload-btn').disabled = false;
+                mostrarAlerta('Error al subir archivo: ' + error.message, 'danger');
+            }
+        });
+
+        // Mostrar alerta
+        function mostrarAlerta(mensaje, tipo) {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = `
+                <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+                    <i class="bi bi-${tipo === 'success' ? 'check-circle' : tipo === 'danger' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                    ${mensaje}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            alertContainer.innerHTML = alert;
+
+            // Auto-cerrar después de 5 segundos
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Formatear fecha
+        function formatearFecha(fecha) {
+            if (!fecha) return '-';
+            const date = new Date(fecha);
+            return date.toLocaleDateString('es-ES');
+        }
+
+        // Formatear número
+        function formatearNumero(numero) {
+            if (numero === null || numero === undefined) return '-';
+            return parseFloat(numero).toLocaleString('es-CO', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+    </script>
+</body>
+
+</html>

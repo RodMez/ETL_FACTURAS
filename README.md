@@ -501,11 +501,11 @@ def process_generales(conn, file_path):
             original_filename = row['filename']
             base_name = original_filename.rsplit('.', 1)[0]
             new_filename = base_name[-7:]
-          
+        
             # 4. Verificar si ya existe (búsqueda O(1) en set)
             if new_filename in existing_filenames:
                 continue  # Saltar factura existente
-          
+        
             # 5. Insertar solo facturas nuevas
             factura_id = insert_factura(conn, new_filename, ...)
 ```
@@ -524,18 +524,18 @@ def process_especificos(conn, file_path):
         reader = csv.DictReader(f)
         for row in reader:
             new_filename = ...
-          
+        
             # 3. Solo procesar detalles de facturas existentes
             if new_filename not in existing_filenames:
                 continue
-          
+        
             # 4. Usar caché de IDs
             if new_filename not in filename_to_id:
                 factura_id = get_factura_id_by_filename(conn, new_filename)
                 filename_to_id[new_filename] = factura_id
             else:
                 factura_id = filename_to_id[new_filename]
-          
+        
             # 5. Verificar duplicados antes de insertar
             if not check_detalle_exists(conn, factura_id, concepto, valor):
                 insert_detalles(conn, factura_id, concepto, valor)
@@ -559,7 +559,7 @@ def process_especificos(conn, file_path):
 
 ---
 
-## 🧠 Conocimientos Técnicos 
+## 🧠 Conocimientos Técnicos
 
 ### 📚 Python Avanzado
 
@@ -618,23 +618,24 @@ def process_especificos(conn, file_path):
 
 ```mermaid
 graph TD
-    A[📂 Carpeta Facturas] -->|Monitoreo| B[🔍 Detectar PDFs nuevos]
-    B -->|Nuevas facturas| C[📄 Extraer texto con pypdf]
-    C --> D[💾 Generar resultado.txt]
-    D --> E[🎯 Heurística: datos_generales]
-    D --> F[🎯 Heurística: datos_especificos]
-    E --> G[📊 datos_generales.csv]
-    F --> H[📊 datos_especificos.csv]
-    G --> I[🔄 Transformación de datos]
+    A[Carpeta Facturas] -->|Monitoreo| B[Detectar PDFs nuevos]
+    B -->|Nuevas facturas| C[Extraer texto con pypdf]
+    C --> D[Generar resultado.txt]
+    D --> E[Heuristica: datos_generales]
+    D --> F[Heuristica: datos_especificos]
+    E --> G[datos_generales.csv]
+    F --> H[datos_especificos.csv]
+    G --> I[Transformacion de datos]
     H --> I
-    I --> J{¿Factura existe en BD?}
-    J -->|No| K[➕ INSERT en tabla Facturas]
-    J -->|Sí| L[⏭️ Saltar factura]
-    K --> M[➕ INSERT Detalles asociados]
-    L --> N[✅ Proceso completo]
+    I --> J{Factura existe en BD?}
+    J -->|No| K[INSERT en tabla Facturas]
+    J -->|Si| L[Saltar factura]
+    K --> M[INSERT Detalles asociados]
+    L --> N[Proceso completo]
     M --> N
-    N --> O[⏰ Esperar intervalo]
+    N --> O[Esperar intervalo]
     O --> B
+
 ```
 
 ---

@@ -34,4 +34,4 @@ Thumbs.db
 
 # Datos sensibles
 *.csv  # Si no quieres commitear los CSV de Facturas/
-resultado.txt
+#resultado.txt
